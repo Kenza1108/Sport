@@ -1,0 +1,9 @@
+event_name	description	event_date	organizer	participants	full_name	email	phone	address	skills	interests	subscription_status	id_number	amount	date	status
+Football Training	Entraînement hebdomadaire pour jeunes	2025-10-20	Coach Karim	Yasmine A.,Riad B.	Yasmine A.	yasmine.a@example.com	0550112233	Bouira	Running,Passing	Football,Teamwork	Paid	201	2500	2025-10-01	paid
+Swimming Class	Cours de natation pour débutants	2025-11-05	Coach Lina	Sami D.,Nora H.	Sami D.	sami.d@example.com	0550445566	Bouira	Swimming,Breathing	Piscine,Health	Pending	202	1800	2025-09-25	unpaid
+Basketball Match	Match interclubs régional	2025-12-01	Coach Nabil	Yasmine A.,Sami D.	Nora H.	nora.h@example.com	0550778899	Tizi Ouzou	Jumping,Dribbling	Basketball,Competition	Paid	203	3000	2025-10-15	paid
+Karate Stage	Stage intensif de karaté	2025-08-10	Sensei Ahmed	Riad B.,Nora H.	Riad B.	riad.b@example.com	0550667788	Boumerdes	Karate,Discipline	Martial Arts,Training	Paid	204	2000	2025-07-25	paid
+Tennis Open	Tournoi local de tennis	2025-09-05	Coach Sara	Yasmine A.,Sami D.	Lina F.	lina.f@example.com	0550333444	Algiers	Serve,Backhand	Tennis,Competition	Pending	205	2200	2025-08-20	unpaid
+Football Championship	Tournoi national des jeunes	2025-11-15	Coach Karim	Lina F.,Riad B.	Ali M.	ali.m@example.com	0550222111	Blida	Defense,Strategy	Football,Competition	Paid	206	3500	2025-10-10	paid
+Swimming Cup	Compétition de nage libre	2025-07-01	Coach Lina	Nora H.,Ali M.	Sami D.	sami.d@example.com	0550556677	Bouira	Freestyle,Endurance	Piscine,Performance	Paid	207	4000	2025-06-15	paid
+Basketball Camp	Camp d'été pour juniors	2025-06-20	Coach Nabil	Riad B.,Yasmine A.	Yasmine A.	yasmine.a@example.com	0550112233	Bouira	Passing,Speed	Basketball,Training	Pending	208	2700	2025-05-25	unpaid
