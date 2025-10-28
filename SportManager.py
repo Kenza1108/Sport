@@ -6,7 +6,6 @@ from subscription import Subscription
 class SportClub:
     def __init__(self, sport_file):
         self.sport_file = sport_file
-        self.sport_file = sport_file
         self.members = []          
         self.events = []           
         self.subscriptions = [] 
@@ -69,6 +68,7 @@ class SportClub:
 
         html.append("</body></html>")
         return "\n".join(html)
+    
     #  Méthode pour sauvegarder le HTML
     def save_html(self, output_file="Sport.html"):
         html_content = self.generate_html()
@@ -76,8 +76,52 @@ class SportClub:
             f.write(html_content)
         print(f"✅ HTML file generated: {output_file}")
 
-
+    #---ADD Member---
+    def add_member(self, full_name, email, phone, address, skills, interests, subscription_status):
+        new_member = Members(
+            full_name=full_name,
+            email=email,
+            phone=phone,
+            address=address,
+            skills=skills,
+            interests=interests,
+            subscription_status=subscription_status
+        )
+        self.members.append(new_member)
+        print(f"✅ Member '{full_name}' added.")
+        #---ADD Event---
+    def add_event(self, event_name, description, event_date, organizer, participants):
+        new_event = Events(
+            event_name=event_name,
+            description=description,
+            event_date=event_date,
+            organizer=organizer,
+            participants=participants
+        )
+        self.events.append(new_event)
+        print(f"✅ Event '{event_name}' added.")
+        #---ADD Subscription
+    def add_subscription(self, id_number, amount, date, status):
+        new_subscription = Subscription(
+            id_number=id_number,
+            amount=amount,
+            date=date,
+            status=status
+        )
+        self.subscriptions.append(new_subscription)
+        print(f"✅ Subscription '{id_number}' added.")
+    #---the main-----
 if __name__ == "__main__":
     club = SportClub("Sport.csv")
+    club.add_member(
+        full_name="Ali Ahmed",
+        email="ali@example.com",
+        phone=123456789,
+        address="Algiers, Algeria",
+        skills="Tennis, Swimming",
+        interests="Fitness, Running",
+        subscription_status="Active"
+    )
     club.load_data()
     club.save_html()
+    
