@@ -16,8 +16,7 @@ class Members():
         self.skills=skills
         self.interests=interests
         self.subscription_status=subscription_status
-    def display_info(self):
-        return (
-            f"{self.full_name} | {self.email} | {self.phone} | {self.address} | "
-            f"{self.skills} | {self.interests} | {self.subscription_status}"
-        )
+    def display_html_row(self):
+        return f"<tr><td>{self.full_name}</td><td>{self.email}</td><td>{self.phone}</td>" \
+               f"<td>{self.address}</td><td>{self.skills}</td><td>{self.interests}</td>" \
+               f"<td>{self.subscription_status}</td></tr>"

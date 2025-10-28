@@ -10,9 +10,8 @@ class Subscription():
         self.amount=amount
         self.date=date
         self.status=status
-    def display_info(self):
-        return (
-            f"{self.id_number} | {self.amoun} | {self.date} | {self.status} | "
-    )
+    def display_html_row(self):
+        return f"<tr><td>{self.id_number}</td><td>{self.amount}</td><td>{self.date}</td>" \
+               f"<td>{self.status}</td></tr>"
 
         

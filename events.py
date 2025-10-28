@@ -12,10 +12,8 @@ class Events():
         self.event_date=event_date
         self.organizer=organizer
         self.participants=participants
-    def display_info(self):
-        return (
-            f"{self.event_name} | {self.description} | {self.event_date} | "
-            f"{self.organizer} | {self.participants}"
-    )
+    def display_html_row(self):
+        return f"<tr><td>{self.event_name}</td><td>{self.description}</td><td>{self.event_date}</td>" \
+               f"<td>{self.organizer}</td><td>{self.participants}</td></tr>"
 
         

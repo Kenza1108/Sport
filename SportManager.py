@@ -6,11 +6,11 @@ from subscription import Subscription
 class SportClub:
     def __init__(self, sport_file):
         self.sport_file = sport_file
-        self.data = {
-            "Members": [],
-            "Events": [],
-            "Subscriptions": [],
-        }
+        self.sport_file = sport_file
+        self.members = []          
+        self.events = []           
+        self.subscriptions = [] 
+        
 
     # Méthode pour lire le CSV et créer les objets
     def load_data(self):
@@ -43,55 +43,32 @@ class SportClub:
                     status=row['status'],
                 )
 
-                self.data["Events"].append(event)
-                self.data["Members"].append(member)
-                self.data["Subscriptions"].append(subscription)
+                self.events.append(event)
+                self.members.append(member)
+                self.subscriptions.append(subscription)
 
     # Méthode pour générer le HTML
     def generate_html(self):
-        html = ['<html><head><meta charset="utf-8"></head><body>']
-        html.append("<center><h1>Sport Club</h1></center>")
+        html = ["<html><head><meta charset='utf-8'></head><body>"]
+        html.append("<h1>Sport Club</h1>")
 
-        # --- Members Section ---
-        html.append("<h2>Members</h2>")
-        html.append("<table border='2' cellspacing='0' cellpadding='5'>")
-        html.append(
-            "<tr><th>Full Name</th><th>Email</th><th>Phone</th>"
-            "<th>Address</th><th>Skills</th><th>Interests</th>"
-            "<th>Subscription Status</th></tr>"
-        )
-        for m in self.data["Members"]:
-            html.append(f"<tr><td>{m.full_name}</td><td>{m.email}</td>"
-                        f"<td>{m.phone}</td><td>{m.address}</td>"
-                        f"<td>{m.skills}</td><td>{m.interests}</td>"
-                        f"<td>{m.subscription_status}</td></tr>")
+        html.append("<h2>Members</h2><table border='1'>")
+        for m in self.members:
+            html.append(m.display_html_row())
         html.append("</table>")
 
-        # --- Events Section ---
-        html.append("<h2>Events</h2>")
-        html.append("<table border='2' cellspacing='0' cellpadding='5'>")
-        html.append(
-            "<tr><th>Event Name</th><th>Description</th><th>Event Date</th>"
-            "<th>Organizer</th><th>Participants</th></tr>"
-        )
-        for e in self.data["Events"]:
-            html.append(f"<tr><td>{e.event_name}</td><td>{e.description}</td>"
-                        f"<td>{e.event_date}</td><td>{e.organizer}</td>"
-                        f"<td>{e.participants}</td></tr>")
+        html.append("<h2>Events</h2><table border='1'>")
+        for e in self.events:
+            html.append(e.display_html_row())
         html.append("</table>")
 
-        # --- Subscriptions Section ---
-        html.append("<h2>Subscriptions</h2>")
-        html.append("<table border='2' cellspacing='0' cellpadding='5'>")
-        html.append("<tr><th>ID Number</th><th>Amount</th><th>Date</th><th>Status</th></tr>")
-        for s in self.data["Subscriptions"]:
-            html.append(f"<tr><td>{s.id_number}</td><td>{s.amount}</td>"
-                        f"<td>{s.date}</td><td>{s.status}</td></tr>")
+        html.append("<h2>Subscriptions</h2><table border='1'>")
+        for s in self.subscriptions:
+            html.append(s.display_html_row())
         html.append("</table>")
+
         html.append("</body></html>")
-
         return "\n".join(html)
-
     #  Méthode pour sauvegarder le HTML
     def save_html(self, output_file="Sport.html"):
         html_content = self.generate_html()
