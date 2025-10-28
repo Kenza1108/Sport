@@ -10,5 +10,9 @@ class Subscription():
         self.amount=amount
         self.date=date
         self.status=status
+    def display_info(self):
+        return (
+            f"{self.id_number} | {self.amoun} | {self.date} | {self.status} | "
+    )
 
         

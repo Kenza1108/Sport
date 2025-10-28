@@ -16,3 +16,8 @@ class Members():
         self.skills=skills
         self.interests=interests
         self.subscription_status=subscription_status
+    def display_info(self):
+        return (
+            f"{self.full_name} | {self.email} | {self.phone} | {self.address} | "
+            f"{self.skills} | {self.interests} | {self.subscription_status}"
+        )
