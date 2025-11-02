@@ -1,127 +1,141 @@
 import csv
-from members import Members
-from events import Events
-from subscription import Subscription
+from models.members import Member
+from models.events import Event
+from models.subscription import Subscription
+from managers.member_repository import MemberRepository
+from managers.EventManager import EventRepository
+from managers.FinanceManager import SubscriptionRepository
+from models.FileStorage import FileStorage
 
 class SportClub:
-    def __init__(self, sport_file):
-        self.sport_file = sport_file
-        self.members = []          
-        self.events = []           
-        self.subscriptions = [] 
-        
+    def __init__(self, members_file, events_file, subscriptions_file):
+        self.members = MemberRepository()
+        self.events = EventRepository()
+        self.subscriptions = SubscriptionRepository()
+        self.members_storage = FileStorage(members_file)
+        self.events_storage = FileStorage(events_file)
+        self.subscriptions_storage = FileStorage(subscriptions_file)
 
-    # Méthode pour lire le CSV et créer les objets
+    # --- Load data from CSV files ---
     def load_data(self):
-        with open(self.sport_file, encoding='utf-8') as f:
-            reader = csv.DictReader(f, delimiter="\t")
+        # Load Members
+        for row in self.members_storage.load_dict_list():
+            self.members.add_member(
+                full_name=row['full_name'],
+                email=row['email'],
+                phone=int(row['phone']),
+                address=row['address'],
+                skills=row['skills'],
+                interests=row['interests'],
+                subscription_status=row['subscription_status'],
+            )
+        
+        # Load Events
+        for row in self.events_storage.load_dict_list():
+            self.events.add_event(
+                event_name=row['event_name'],
+                description=row['description'],
+                event_date=row['event_date'],
+                organizer=row['organizer'],
+                participants=row['participants'],
+            )
+        
+        # Load Subscriptions
+        for row in self.subscriptions_storage.load_dict_list():
+            self.subscriptions.add_subscription(
+                id_number=row['id_number'],
+                amount=float(row['amount']),
+                date=row['date'],
+                status=row['status'],
+            )
 
-            for row in reader:
-                event = Events(
-                    event_name=row['event_name'],
-                    description=row['description'],
-                    event_date=row['event_date'],
-                    organizer=row['organizer'],
-                    participants=row['participants'],
-                )
+    # --- Save data to CSV files ---
+    def save_data(self):
+        # Save Members
+        members_list = [m.to_dict() for m in self.members.get_all_members()]
+        self.members_storage.save_dict_list(members_list, fieldnames=[
+            "full_name", "email", "phone", "address", "skills", "interests", "subscription_status"
+        ])
+        
+        # Save Events
+        events_list = [e.to_dict() for e in self.events.get_all_events()]
+        self.events_storage.save_dict_list(events_list, fieldnames=[
+            "event_name", "description", "event_date", "organizer", "participants"
+        ])
+        
+        # Save Subscriptions
+        subscriptions_list = [s.to_dict() for s in self.subscriptions.get_all_subscriptions()]
+        self.subscriptions_storage.save_dict_list(subscriptions_list, fieldnames=[
+            "id_number", "amount", "date", "status"
+        ])
+        
+        print("✅ All data saved successfully.")
 
-                member = Members(
-                    full_name=row['full_name'],
-                    email=row['email'],
-                    phone=int(row['phone']),
-                    address=row['address'],
-                    skills=row['skills'],
-                    interests=row['interests'],
-                    subscription_status=row['subscription_status'],
-                )
-
-                subscription = Subscription(
-                    id_number=row['id_number'],
-                    amount=float(row['amount']),
-                    date=row['date'],
-                    status=row['status'],
-                )
-
-                self.events.append(event)
-                self.members.append(member)
-                self.subscriptions.append(subscription)
-
-    # Méthode pour générer le HTML
+    # --- Generate HTML with headers ---
     def generate_html(self):
         html = ["<html><head><meta charset='utf-8'></head><body>"]
-        html.append("<h1>Sport Club</h1>")
+        html.append("<h1>🏆 Sport Club</h1>")
 
-        html.append("<h2>Members</h2><table border='1'>")
-        for m in self.members:
-            html.append(m.display_html_row())
-        html.append("</table>")
+        # Members
+        members = self.members.get_all_members()
+        if members:
+            html.append("<h2>Members</h2><table border='1'>")
+            headers = members[0].to_dict().keys()
+            html.append("<tr>" + "".join(f"<th>{h}</th>" for h in headers) + "</tr>")
+            for m in members:
+                html.append(m.display_html_row())
+            html.append("</table>")
 
-        html.append("<h2>Events</h2><table border='1'>")
-        for e in self.events:
-            html.append(e.display_html_row())
-        html.append("</table>")
+        # Events
+        events = self.events.get_all_events()
+        if events:
+            html.append("<h2>Events</h2><table border='1'>")
+            headers = events[0].to_dict().keys()
+            html.append("<tr>" + "".join(f"<th>{h}</th>" for h in headers) + "</tr>")
+            for e in events:
+                html.append(e.display_html_row())
+            html.append("</table>")
 
-        html.append("<h2>Subscriptions</h2><table border='1'>")
-        for s in self.subscriptions:
-            html.append(s.display_html_row())
-        html.append("</table>")
+        # Subscriptions
+        subs = self.subscriptions.get_all_subscriptions()
+        if subs:
+            html.append("<h2>Subscriptions</h2><table border='1'>")
+            headers = subs[0].to_dict().keys()
+            html.append("<tr>" + "".join(f"<th>{h}</th>" for h in headers) + "</tr>")
+            for s in subs:
+                html.append(s.display_html_row())
+            html.append("</table>")
 
         html.append("</body></html>")
         return "\n".join(html)
-    
-    #  Méthode pour sauvegarder le HTML
+
+    # --- Save HTML page ---
     def save_html(self, output_file="Sport.html"):
         html_content = self.generate_html()
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(html_content)
         print(f"✅ HTML file generated: {output_file}")
 
-    #---ADD Member---
-    def add_member(self, full_name, email, phone, address, skills, interests, subscription_status):
-        new_member = Members(
-            full_name=full_name,
-            email=email,
-            phone=phone,
-            address=address,
-            skills=skills,
-            interests=interests,
-            subscription_status=subscription_status
-        )
-        self.members.append(new_member)
-        print(f"✅ Member '{full_name}' added.")
-        #---ADD Event---
-    def add_event(self, event_name, description, event_date, organizer, participants):
-        new_event = Events(
-            event_name=event_name,
-            description=description,
-            event_date=event_date,
-            organizer=organizer,
-            participants=participants
-        )
-        self.events.append(new_event)
-        print(f"✅ Event '{event_name}' added.")
-        #---ADD Subscription
-    def add_subscription(self, id_number, amount, date, status):
-        new_subscription = Subscription(
-            id_number=id_number,
-            amount=amount,
-            date=date,
-            status=status
-        )
-        self.subscriptions.append(new_subscription)
-        print(f"✅ Subscription '{id_number}' added.")
-    #---the main-----
+# --- Main execution ---
 if __name__ == "__main__":
-    club = SportClub("Sport.csv")
-    club.add_member(
+    club = SportClub("members.csv", "events.csv", "subscriptions.csv")
+
+    # Example: Add a new member
+    club.members.add_member(
         full_name="Ali Ahmed",
         email="ali@example.com",
         phone=123456789,
         address="Algiers, Algeria",
         skills="Tennis, Swimming",
         interests="Fitness, Running",
-        subscription_status="Active"
+        subscription_status="paid"
     )
+
+    # Load existing CSV data
     club.load_data()
+
+    # Generate HTML file
     club.save_html()
-    
+
+    # Save updated CSV data
+    club.save_data()
