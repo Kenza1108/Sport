@@ -1,16 +1,18 @@
+# models/members.py
 from interfaces.member_interface import MemberInterface
 
-# --- Member class implementing Registrable ---
 class Member(MemberInterface):
+    """Classe représentant un membre de l'association."""
+
     def __init__(
         self,
-        full_name: str = "",
-        email: str = "",
-        phone: int = 0,
-        address: str = "",
-        skills: str = "",
-        interests: str = "",
-        subscription_status: str = "",
+        full_name: str,
+        email: str,
+        phone: str,
+        address: str,
+        skills: str,
+        interests: str,
+        subscription_status: str,
     ):
         self.full_name = full_name
         self.email = email
@@ -19,8 +21,10 @@ class Member(MemberInterface):
         self.skills = skills
         self.interests = interests
         self.subscription_status = subscription_status
-    
-    def to_dict(self):
+
+    # --- Méthodes implémentées de l'interface ---
+    def to_dict(self) -> dict:
+        """Retourne un dictionnaire représentant le membre."""
         return {
             "full_name": self.full_name,
             "email": self.email,
@@ -30,13 +34,21 @@ class Member(MemberInterface):
             "interests": self.interests,
             "subscription_status": self.subscription_status
         }
-    def display_html_row(self):
+
+    def display_html_row(self) -> str:
+        """Retourne une ligne HTML représentant le membre."""
         return (
-            f"<tr><td>{self.full_name}</td><td>{self.email}</td><td>{self.phone}</td>"
-            f"<td>{self.address}</td><td>{self.skills}</td><td>{self.interests}</td>"
-            f"<td>{self.subscription_status}</td></tr>"
+            f"<tr>"
+            f"<td>{self.full_name}</td>"
+            f"<td>{self.email}</td>"
+            f"<td>{self.phone}</td>"
+            f"<td>{self.address}</td>"
+            f"<td>{self.skills}</td>"
+            f"<td>{self.interests}</td>"
+            f"<td>{self.subscription_status}</td>"
+            f"</tr>"
         )
 
-    # --- Registrable method ---
     def register_member(self):
-        print(f"Member '{self.full_name}' registered successfully.")
+        """Affiche un message de confirmation lors de l'inscription."""
+        print(f"✅ Membre '{self.full_name}' enregistré avec succès.")

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subscriptions Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h2 class="mb-4">💳 Manage Subscriptions</h2>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <form id="subForm" class="row g-3">
+          <div class="col-md-5">
+            <input type="text" id="member_id" class="form-control" placeholder="Member ID" required>
+          </div>
+          <div class="col-md-5">
+            <input type="text" id="event_id" class="form-control" placeholder="Event ID" required>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Add Subscription</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <h4>Current Subscriptions:</h4>
+    <ul id="subList" class="list-group"></ul>
+  </div>
+
+  <script>
+    async function loadSubs() {
+      const res = await fetch('/api/subscriptions');
+      const subs = await res.json();
+      const list = document.getElementById('subList');
+      list.innerHTML = '';
+      subs.forEach(s => {
+        const li = document.createElement('li');
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `
+          Subscription #${s.id_number} — Member ${s.member_id} for Event ${s.event_id}
+          <button class="btn btn-sm btn-danger" onclick="deleteSub('${s.id_number}')">Delete</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    async function deleteSub(id) {
+      await fetch('/api/subscriptions/' + id, { method: 'DELETE' });
+      loadSubs();
+    }
+
+    document.getElementById('subForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const member_id = document.getElementById('member_id').value;
+      const event_id = document.getElementById('event_id').value;
+      await fetch('/api/subscriptions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ member_id, event_id })
+      });
+      e.target.reset();
+      loadSubs();
+    });
+
+    loadSubs();
+  </script>
+</body>
+</html>

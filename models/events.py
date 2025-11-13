@@ -1,7 +1,10 @@
+# models/events.py
 from interfaces.event_interface import EventInterface
 
-# --- Base Event class implementing Organizable ---
+# --- Classe de base : Event ---
 class Event(EventInterface):
+    """Classe représentant un événement dans le club sportif."""
+
     def __init__(self, event_name, description, event_date, organizer, participants):
         self.event_name = event_name
         self.description = description
@@ -10,21 +13,15 @@ class Event(EventInterface):
         self.participants = participants
 
     def describe(self):
-        return f"Event '{self.event_name}' organized by {self.organizer} on {self.event_date}."
-
-    def display_html_row(self):
-        return (
-            f"<tr><td>{self.event_name}</td>"
-            f"<td>{self.description}</td>"
-            f"<td>{self.event_date}</td>"
-            f"<td>{self.organizer}</td>"
-            f"<td>{self.participants}</td></tr>"
-        )
+        """Retourne une courte description de l’événement."""
+        return f"Événement '{self.event_name}' organisé par {self.organizer} le {self.event_date}."
 
     def schedule(self):
-        """Default scheduling for a generic event"""
-        print(f"Scheduling event '{self.event_name}' on {self.event_date}.")
+        """Planifie un événement générique."""
+        print(f"📅 Planification de l’événement '{self.event_name}' le {self.event_date}.")
+
     def to_dict(self):
+        """Retourne une représentation dictionnaire de l’événement."""
         return {
             "event_name": self.event_name,
             "description": self.description,
@@ -33,60 +30,76 @@ class Event(EventInterface):
             "participants": self.participants
         }
 
-# --- Subclasses ---
+    def display_html_row(self):
+        """Retourne une ligne HTML représentant l’événement."""
+        return (
+            f"<tr>"
+            f"<td>{self.event_name}</td>"
+            f"<td>{self.description}</td>"
+            f"<td>{self.event_date}</td>"
+            f"<td>{self.organizer}</td>"
+            f"<td>{self.participants}</td>"
+            f"</tr>"
+        )
+
+
+# --- Sous-classes spécialisées ---
 class Trip(Event):
+    """Sous-classe pour les voyages organisés."""
     def __init__(self, event_name, description, event_date, organizer, participants, location):
         super().__init__(event_name, description, event_date, organizer, participants)
         self.location = location
 
     def describe(self):
-        return f"Trip '{self.event_name}' to {self.location} organized by {self.organizer}."
+        return f"Voyage '{self.event_name}' vers {self.location} organisé par {self.organizer}."
+
+    def schedule(self):
+        print(f"📍 Planification du voyage '{self.event_name}' à {self.location} le {self.event_date}.")
 
     def display_html_row(self):
         return super().display_html_row()[:-5] + f"<td>{self.location}</td></tr>"
 
-    def schedule(self):
-        print(f"Scheduling trip '{self.event_name}' to {self.location} on {self.event_date}.")
-
 
 class Meeting(Event):
+    """Sous-classe pour les réunions."""
     def __init__(self, event_name, description, event_date, organizer, participants, room):
         super().__init__(event_name, description, event_date, organizer, participants)
         self.room = room
 
     def describe(self):
-        return f"Meeting '{self.event_name}' held in room {self.room} organized by {self.organizer}."
+        return f"Réunion '{self.event_name}' dans la salle {self.room}, organisée par {self.organizer}."
+
+    def schedule(self):
+        print(f"🏢 Planification de la réunion '{self.event_name}' (salle {self.room}) le {self.event_date}.")
 
     def display_html_row(self):
         return super().display_html_row()[:-5] + f"<td>{self.room}</td></tr>"
 
-    def schedule(self):
-        print(f"Scheduling meeting '{self.event_name}' in room {self.room} on {self.event_date}.")
-
 
 class Competition(Event):
+    """Sous-classe pour les compétitions."""
     def __init__(self, event_name, description, event_date, organizer, participants, prize):
         super().__init__(event_name, description, event_date, organizer, participants)
         self.prize = prize
 
     def describe(self):
-        return f"Competition '{self.event_name}' with prize '{self.prize}' organized by {self.organizer}."
+        return f"Compétition '{self.event_name}' avec prix '{self.prize}' organisée par {self.organizer}."
+
+    def schedule(self):
+        print(f"🏆 Planification de la compétition '{self.event_name}' (prix : {self.prize}) le {self.event_date}.")
 
     def display_html_row(self):
         return super().display_html_row()[:-5] + f"<td>{self.prize}</td></tr>"
-
-    def schedule(self):
-        print(f"Scheduling competition '{self.event_name}' with prize '{self.prize}' on {self.event_date}.")
-
-
-# --- Function for LSP ---
+    
+# --- Fonction utilitaire ---
 def display_event_details(event: Event):
-    print(" Event Details:")
-    print(f"Name: {event.event_name}")
-    print(f"Description: {event.description}")
-    print(f"Date: {event.event_date}")
-    print(f"Organizer: {event.organizer}")
-    print(f"Participants: {event.participants}")
-    print("Info:", event.describe())
-    event.schedule()  # show scheduling (Organizable interface)
+    """Affiche les détails d’un événement quel que soit son type."""
+    print("📘 Détails de l’événement :")
+    print(f"Nom : {event.event_name}")
+    print(f"Description : {event.description}")
+    print(f"Date : {event.event_date}")
+    print(f"Organisateur : {event.organizer}")
+    print(f"Participants : {event.participants}")
+    print("→", event.describe())
+    event.schedule()
     print("-" * 40)
