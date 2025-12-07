@@ -30,6 +30,10 @@ class Subscription(SubscriptionInterface):
         print(f"Processing payment of {self.amount} for subscription {self.id_number}")
         self.status = "paid"
 
+    @staticmethod
+    def fields():
+        return ["id_number", "amount", "date", "status"]
+
 
 # --- Subclass 1: Donation ---
 class Donation(Subscription):
@@ -57,6 +61,10 @@ class Donation(Subscription):
         print(f"Processing donation of {self.amount} from {self.donor_name}")
         self.status = "donated"
 
+    @staticmethod
+    def fields():
+        return Subscription.fields() + ["donor_name"]
+
 
 # --- Subclass 2: Monthly Subscription ---
 class MonthlySubscription(Subscription):
@@ -80,6 +88,10 @@ class MonthlySubscription(Subscription):
             f"</tr>"
         )
 
+    @staticmethod
+    def fields():
+        return Subscription.fields() + ["month"]
+
 
 # --- Subclass 3: Annual Subscription ---
 class AnnualSubscription(Subscription):
@@ -102,3 +114,7 @@ class AnnualSubscription(Subscription):
             f"<td>{self.year}</td>"
             f"</tr>"
         )
+
+    @staticmethod
+    def fields():
+        return Subscription.fields() + ["year"]

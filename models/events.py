@@ -1,4 +1,3 @@
-# models/events.py
 from interfaces.event_interface import EventInterface
 
 # --- Classe de base : Event ---
@@ -13,15 +12,12 @@ class Event(EventInterface):
         self.participants = participants
 
     def describe(self):
-        """Retourne une courte description de l’événement."""
         return f"Événement '{self.event_name}' organisé par {self.organizer} le {self.event_date}."
 
     def schedule(self):
-        """Planifie un événement générique."""
         print(f"📅 Planification de l’événement '{self.event_name}' le {self.event_date}.")
 
     def to_dict(self):
-        """Retourne une représentation dictionnaire de l’événement."""
         return {
             "event_name": self.event_name,
             "description": self.description,
@@ -31,7 +27,6 @@ class Event(EventInterface):
         }
 
     def display_html_row(self):
-        """Retourne une ligne HTML représentant l’événement."""
         return (
             f"<tr>"
             f"<td>{self.event_name}</td>"
@@ -42,10 +37,12 @@ class Event(EventInterface):
             f"</tr>"
         )
 
+    @staticmethod
+    def fields():
+        return ["event_name", "description", "event_date", "organizer", "participants"]
 
 # --- Sous-classes spécialisées ---
 class Trip(Event):
-    """Sous-classe pour les voyages organisés."""
     def __init__(self, event_name, description, event_date, organizer, participants, location):
         super().__init__(event_name, description, event_date, organizer, participants)
         self.location = location
@@ -59,9 +56,12 @@ class Trip(Event):
     def display_html_row(self):
         return super().display_html_row()[:-5] + f"<td>{self.location}</td></tr>"
 
+    @staticmethod
+    def fields():
+        return Event.fields() + ["location"]
+
 
 class Meeting(Event):
-    """Sous-classe pour les réunions."""
     def __init__(self, event_name, description, event_date, organizer, participants, room):
         super().__init__(event_name, description, event_date, organizer, participants)
         self.room = room
@@ -75,9 +75,12 @@ class Meeting(Event):
     def display_html_row(self):
         return super().display_html_row()[:-5] + f"<td>{self.room}</td></tr>"
 
+    @staticmethod
+    def fields():
+        return Event.fields() + ["room"]
+
 
 class Competition(Event):
-    """Sous-classe pour les compétitions."""
     def __init__(self, event_name, description, event_date, organizer, participants, prize):
         super().__init__(event_name, description, event_date, organizer, participants)
         self.prize = prize
@@ -90,10 +93,13 @@ class Competition(Event):
 
     def display_html_row(self):
         return super().display_html_row()[:-5] + f"<td>{self.prize}</td></tr>"
-    
+
+    @staticmethod
+    def fields():
+        return Event.fields() + ["prize"]
+
 # --- Fonction utilitaire ---
 def display_event_details(event: Event):
-    """Affiche les détails d’un événement quel que soit son type."""
     print("📘 Détails de l’événement :")
     print(f"Nom : {event.event_name}")
     print(f"Description : {event.description}")
